@@ -4,7 +4,7 @@
     <p>
       <el-input
         placeholder="请输入用户名"
-        v-model="form.name"
+        v-model="form.username"
         prefix-icon="el-icon-user-solid"
         style="width: 300px"
       >
@@ -13,9 +13,9 @@
     <p>
       <el-input
         placeholder="请输入密码"
+        show-password
         v-model="form.password"
         prefix-icon="el-icon-goods"
-        suffix-icon="el-icon-more"
         style="width: 300px"
       >
       </el-input>
@@ -23,15 +23,17 @@
     <el-button type="primary" style="width: 300px" @click="gotoHomepage"
       >login</el-button
     >
+    <p>username:admin  password:123456</p>
   </div>
 </template>
 <script>
+import {login} from "../utils/api"
 export default {
   data() {
     return {
       // 表单
       form: {
-        name: "",
+        username: "",
         password: "",
       },
     };
@@ -39,12 +41,12 @@ export default {
   methods: {
     // 登录
     gotoHomepage() {
-      if (this.form.name == "admin" || this.form.password == "123456") {
-        localStorage.setItem("token",this.form)
-        this.$router.push("/");
-      } else {
-        alert("请输入正确的账号");
-      }
+      login(this.form).then(res=>{
+        sessionStorage.setItem('token',res.data.data.token)
+        this.$router.push('/')
+        console.log(res);
+      })
+      
     },
   },
 };
